@@ -3,6 +3,7 @@ const fetch = require('node-fetch');
 const app = express();
 
 app.use(express.json());
+
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -13,6 +14,10 @@ app.use((req, res, next) => {
 app.post('/chat', async (req, res) => {
   try {
     const { messages, tools } = req.body;
+    
+    // Логируем, что пришло
+    console.log('[RENDER] Received messages:', messages.length);
+
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -21,9 +26,15 @@ app.post('/chat', async (req, res) => {
       },
       body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages, tools })
     });
+
     const data = await groqRes.text();
+    
+    // Логируем, что ответил Groq
+    console.log('[GROQ RESPONSE] Status:', groqRes.status, 'Data:', data.slice(0, 100));
+
     res.status(groqRes.status).send(data);
   } catch (e) {
+    console.error('[RENDER ERROR]', e.message);
     res.status(500).json({ error: e.message });
   }
 });
