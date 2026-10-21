@@ -4,11 +4,8 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/chat', (req, res) => {
-  res.send('Сервер работает. Отправь POST-запрос.');
-});
-
-app.post('/chat', async (req, res) => {
+// Обработчик для любого POST-запроса
+app.post('*', async (req, res) => {
   try {
     const { messages, tools } = req.body || {};
     console.log('[RENDER] Получено сообщений:', messages ? messages.length : 0);
