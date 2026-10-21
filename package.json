@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "groq-proxy",
   "version": "1.0.0",
@@ -6,4 +7,14 @@
     "express": "^4.18.2",
     "node-fetch": "^2.7.0"
   }
+=======
+{
+  "name": "groq-proxy",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.7.0"
+  }
+>>>>>>> 1221cb0c3ed8c4996f4c554d65da959e7e30ad5a
 }
