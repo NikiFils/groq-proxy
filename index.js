@@ -1,20 +1,15 @@
-export default async function handler(req, res) {
-  // Настройка CORS
+const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+app.post('/api', async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
 
   try {
     const { messages, tools } = req.body || {};
-    console.log('[VERCEL] Получено сообщений:', messages ? messages.length : 0);
-
+    
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -29,11 +24,10 @@ export default async function handler(req, res) {
     });
 
     const data = await groqRes.text();
-    console.log('[GROQ] Статус:', groqRes.status);
-
     res.status(groqRes.status).send(data);
   } catch (e) {
-    console.error('[VERCEL ERROR]', e.message);
     res.status(500).json({ error: e.message });
   }
-}
+});
+
+module.exports = app;
