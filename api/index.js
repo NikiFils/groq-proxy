@@ -1,13 +1,15 @@
-import express from 'express';
-
-const app = express();
-app.use(express.json());
-
-app.post('/api/chat', async (req, res) => {
+export default async function handler(req, res) {
+  // Настройка CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   
-  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
 
   try {
     const { messages, tools } = req.body || {};
@@ -34,6 +36,4 @@ app.post('/api/chat', async (req, res) => {
     console.error('[VERCEL ERROR]', e.message);
     res.status(500).json({ error: e.message });
   }
-});
-
-export default app;
+}
