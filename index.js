@@ -10,6 +10,7 @@ app.post('*', async (req, res) => {
     const { messages, tools } = req.body || {};
     console.log('[RENDER] Получено сообщений:', messages ? messages.length : 0);
 
+    // ИСПРАВЛЕНА МОДЕЛЬ НА РАБОЧУЮ
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -17,7 +18,7 @@ app.post('*', async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ 
-        model: "llama-3.3-70b-versatile", 
+        model: "llama-3.3-70b-specdec", 
         messages, 
         tools: tools && tools.length > 0 ? tools : undefined 
       })
