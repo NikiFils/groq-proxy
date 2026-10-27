@@ -8,10 +8,10 @@ app.post('/api', async (req, res) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   try {
-    const { messages, tools, tool_choice } = req.body || {};
+    const { messages, tools, tool_choice, model } = req.body || {};
 
     const payload = {
-      model: "openai/gpt-oss-120b",
+      model: model || "openai/gpt-oss-120b", // <-- Используем модель из запроса
       messages: messages || [],
     };
     if (Array.isArray(tools) && tools.length > 0) {
