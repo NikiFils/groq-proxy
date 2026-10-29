@@ -11,12 +11,13 @@ app.post('/api', async (req, res) => {
     const { messages, tools, tool_choice, model } = req.body || {};
 
     const payload = {
-      model: model || "openai/gpt-oss-120b", // <-- Используем модель из запроса
+      model: model || "llama-3.3-70b-versatile",
       messages: messages || [],
     };
+    
     if (Array.isArray(tools) && tools.length > 0) {
       payload.tools = tools;
-      if (tool_choice) payload.tool_choice = tool_choice;
+      payload.tool_choice = tool_choice || "auto";
     }
 
     const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -29,6 +30,11 @@ app.post('/api', async (req, res) => {
     });
 
     const data = await groqRes.text();
+    
+    if (!groqRes.ok) {
+      console.error("GROQ API ERROR:", data);
+    }
+    
     res.status(groqRes.status).send(data);
   } catch (e) {
     res.status(500).json({ error: e.message });
